@@ -94,6 +94,18 @@ data = torch.utils.data.DataLoader(
 
 # %%
 
+class VariationalAutoencoder(nn.Module):
+    def __init__(self, latent_dims):
+        super(VariationalAutoencoder, self).__init__()
+        self.encoder = VariationalEncoder(latent_dims)
+        self.decoder = Decoder(latent_dims)
+
+    def forward(self, x):
+        z = self.encoder(x)
+        return self.decoder(z)
+
+# %%
+
 # Initialize and train the VAE
 vae = VariationalAutoencoder(latent_dims).to(device)
 elbo_loss_history, kl_history = train(vae, data, epochs)
